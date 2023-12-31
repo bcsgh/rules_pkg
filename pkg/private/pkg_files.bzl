@@ -340,7 +340,7 @@ def add_empty_file(mapping_context, dest_path, origin, mode = None, user = None,
         gid = gid or mapping_context.default_gid,
     )
 
-def add_label_list(mapping_context, srcs):
+def add_label_list(ctx, mapping_context, srcs):
     """Helper method to add a list of labels (typically 'srcs') to a content_map.
 
     Args:
@@ -366,6 +366,7 @@ def add_label_list(mapping_context, srcs):
         ):
             # Add in the files of srcs which are not pkg_* types
             add_from_default_info(
+                ctx,
                 mapping_context,
                 src,
                 data_path,
@@ -374,6 +375,7 @@ def add_label_list(mapping_context, srcs):
             )
 
 def add_from_default_info(
+        ctx,
         mapping_context,
         src,
         data_path,
@@ -432,7 +434,10 @@ def add_from_default_info(
             base_path = base_file_path + ".runfiles"
 
             for rf in runfiles.files.to_list():
-                d_path = base_path + "/" + rf.short_path
+                if rf.short_path[:3] == "../":
+                    d_path = base_path + "/" + rf.short_path[3:]
+                else:
+                    d_path = base_path + "/" + ctx.workspace_name + "/" + rf.short_path
                 fmode = "0755" if rf == the_executable else mapping_context.default_mode
                 _check_dest(mapping_context.content_map, d_path, rf, src.label, mapping_context.allow_duplicates_with_different_content)
                 mapping_context.content_map[d_path] = _DestFile(

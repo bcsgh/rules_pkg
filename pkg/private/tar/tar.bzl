@@ -131,7 +131,7 @@ def _pkg_tar_impl(ctx):
         path_mapper = path_mapper,
     )
 
-    add_label_list(mapping_context, srcs = ctx.attr.srcs)
+    add_label_list(ctx, mapping_context, srcs = ctx.attr.srcs)
 
     # The files attribute is a map of labels to destinations. We can add them
     # directly to the content map.

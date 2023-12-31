@@ -54,7 +54,7 @@ def _pkg_zip_impl(ctx):
         strip_prefix = ctx.attr.strip_prefix,
         default_mode = ctx.attr.mode,
     )
-    add_label_list(mapping_context, srcs = ctx.attr.srcs)
+    add_label_list(ctx, mapping_context, srcs = ctx.attr.srcs)
 
     manifest_file = ctx.actions.declare_file(ctx.label.name + ".manifest")
     inputs.append(manifest_file)

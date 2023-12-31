@@ -340,7 +340,7 @@ def add_empty_file(mapping_context, dest_path, origin, mode = None, user = None,
         gid = gid or mapping_context.default_gid,
     )
 
-def add_label_list(mapping_context, srcs):
+def add_label_list(ctx, mapping_context, srcs):
     """Helper method to add a list of labels (typically 'srcs') to a content_map.
 
     Args:
@@ -366,6 +366,7 @@ def add_label_list(mapping_context, srcs):
         ):
             # Add in the files of srcs which are not pkg_* types
             add_from_default_info(
+                ctx,
                 mapping_context,
                 src,
                 data_path,
@@ -374,6 +375,7 @@ def add_label_list(mapping_context, srcs):
             )
 
 def add_from_default_info(
+        ctx,
         mapping_context,
         src,
         data_path,
@@ -429,7 +431,7 @@ def add_from_default_info(
             base_file = the_executable or all_files[0]
             base_file_path = mapping_context.path_mapper(
                 dest_path(base_file, data_path, data_path_without_prefix))
-            base_path = base_file_path + ".runfiles"
+            base_path = base_file_path + ".runfiles/" + ctx.workspace_name
 
             for rf in runfiles.files.to_list():
                 d_path = base_path + "/" + rf.short_path
